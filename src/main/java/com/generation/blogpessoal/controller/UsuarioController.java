@@ -33,7 +33,8 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
-	@GetMapping
+	
+	@GetMapping("/all")
 	public ResponseEntity<List<Usuario>> getAll(){
 		return ResponseEntity.ok(usuarioRepository.findAll());
 	}
@@ -45,17 +46,15 @@ public class UsuarioController {
 			.orElse(ResponseEntity.notFound().build());
 	}
 	
-
     @PostMapping("/logar")
     public ResponseEntity<UsuarioLogin> login(@RequestBody Optional<UsuarioLogin> usuarioLogin) {
-        return usuarioService.autenticarUsuario(usuarioLogin)
+        return usuarioService.logarUsuario(usuarioLogin)
             .map(resposta -> ResponseEntity.ok(resposta))
             .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
     @PostMapping("/cadastrar")
     public ResponseEntity<Usuario> postUsuario(@Valid @RequestBody Usuario usuario) {
-
         return usuarioService.cadastrarUsuario(usuario)
             .map(resposta -> ResponseEntity.status(HttpStatus.CREATED).body(resposta))
             .orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
@@ -67,5 +66,4 @@ public class UsuarioController {
 			.map(resposta -> ResponseEntity.status(HttpStatus.OK).body(resposta))
 			.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
-
 }
